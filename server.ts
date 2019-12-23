@@ -3,16 +3,16 @@ const http = require('http');
 export default function createServer() {
     const routeMap = {};
 
-    const server = http.createServer(function onRequest(request, response) {
+    const server = http.createServer(async function onRequest(request, response) {
         const { url } = request;
         const urlHandler = routeMap[url] || routeMap["/404"];
 
         try {
-            const responseValue = urlHandler();
+            const responseValue = await urlHandler();
             response.write(responseValue);
         } catch (err) {
             console.error(err);
-            response.write(routeMap["/500"]());
+            response.write(await routeMap["/500"]());
         } finally {
             response.end();
         }
@@ -25,15 +25,15 @@ export default function createServer() {
         internalServerError
     }
 
-    function internalServerError<T>(callback: () => T) {
+    function internalServerError<T>(callback: () => Promise<T>) {
         get<T>("/500", callback);
     }
 
-    function notFound<T>(callback: () => T) {
+    function notFound<T>(callback: () => Promise<T>) {
         get<T>("/404", callback);
     }
 
-    function get<T>(route: string, callback: () => T) {
+    function get<T>(route: string, callback: () => Promise<T>) {
         routeMap[route] = callback;
     }
 
