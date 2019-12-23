@@ -5,11 +5,9 @@ export default function createServer() {
 
     const server = http.createServer(function onRequest(request, response) {
         const { url } = request;
+        const urlHandler = routeMap[url] || routeMap["/404"];
 
-        if (routeMap[url]) {
-            const returnValue = routeMap[url]();
-            response.write(returnValue);
-        }
+        response.write(urlHandler());
 
         response.end();
     })
@@ -17,6 +15,16 @@ export default function createServer() {
     return {
         get,
         listen,
+        notFound,
+        internalServerError
+    }
+
+    function internalServerError<T>(callback: () => T) {
+        get<T>("/500", callback);
+    }
+
+    function notFound<T>(callback: () => T) {
+        get<T>("/404", callback);
     }
 
     function get<T>(route: string, callback: () => T) {
@@ -24,6 +32,15 @@ export default function createServer() {
     }
 
     function listen(port: number, callback?: () => void) {
+
+        if (!routeMap["/404"]) {
+            throw new Error("You have to setup a 404 page");
+        }
+
+        if (!routeMap["/500"]) {
+            throw new Error("You have to setup an internal server error page");
+        }
+
         server.listen(port, null, null, callback);
     }
 }

@@ -2,8 +2,9 @@ import createServer from './server';
 
 const server = createServer();
 
-server.get<string>('/', home);
+server.notFound(notFound);
 
+server.get<string>('/', home);
 server.get<string>('/about', about);
 
 server.listen(8080, function onListening() {
@@ -16,4 +17,8 @@ function home() {
 
 function about() {
     return "about";
+}
+
+function notFound() {
+    return "404 - not found";
 }
