@@ -1,22 +1,36 @@
-const http = require('http');
+import http, { IncomingMessage, ServerResponse } from 'http';
 
 export default function createServer() {
     const routeMap = {};
 
-    const server = http.createServer(async function onRequest(request, response) {
+    const server = http.createServer(async function onRequest(request: IncomingMessage, response: ServerResponse) {
         const { url } = request;
-        const urlHandler = routeMap[url] || routeMap["/404"];
 
-        response.writeHead(200, {
-            'Content-Type': 'text/html'
-        });
+        if (!url) {
+            throw new Error("Url not present in the request");
+        }
+
+        const urlHandler = routeMap[url] || routeMap["/404"];
+        const statusCode = routeMap[url] ? 200 : 404
 
         try {
+
             const responseValue = (await urlHandler()).outerHTML;
+
+            response.writeHead(statusCode, {
+                'Content-Type': 'text/html'
+            });
+
             response.write(responseValue);
+
+
         } catch (err) {
             console.error(err);
+            response.writeHead(500, {
+                'Content-Type': 'text/html'
+            });
             response.write((await routeMap["/500"]()).outerHTML);
+
         } finally {
             response.end();
         }
@@ -51,7 +65,7 @@ export default function createServer() {
             throw new Error("You have to setup an internal server error page");
         }
 
-        server.listen(port, null, null, callback);
+        server.listen(port, undefined, undefined, callback);
     }
 }
 

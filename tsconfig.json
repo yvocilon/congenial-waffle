@@ -7,15 +7,9 @@
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "strictNullChecks": true,
-        "jsxFactory": "h"
+        "jsxFactory": "h",
     },
     "exclude": [
         "node_modules",
-        "build",
-        "scripts",
-        "acceptance-tests",
-        "webpack",
-        "jest",
-        "src/setupTests.ts"
     ],
 }
