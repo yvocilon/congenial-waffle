@@ -1,41 +1,23 @@
 import createServer from './server';
-import { getPosts } from './api';
 
-import home from './pages/Home';
+import Home from './pages/Home';
+import About from './pages/About';
+import ThrowError from './pages/ThrowError';
+import Posts from './pages/Posts';
+
+import NotFound from './pages/NotFound';
+import InternalServerError from './pages/InternalServerError';
 
 const server = createServer();
 
-server.notFound(notFound);
-server.internalServerError(internalServerError);
+server.notFound(NotFound);
+server.internalServerError(InternalServerError);
 
-server.get<string>('/', home);
-server.get<string>('/about', about);
-server.get<string>('/posts', posts);
-server.get<string>('/throw-error', throwError);
+server.get<string>('/', Home);
+server.get<string>('/about', About);
+server.get<string>('/posts', Posts);
+server.get<string>('/throw-error', ThrowError);
 
 server.listen(8080, function onListening() {
     console.log("Listening on 8080");
 });
-
-async function about() {
-    return "about";
-}
-
-async function throwError() {
-    throw new Error("Throwing an error");
-    return "Error";
-}
-
-async function posts() {
-    const posts = await getPosts();
-    return posts.join("\n");
-}
-
-
-async function notFound() {
-    return "404 - not found";
-}
-
-async function internalServerError() {
-    return "500 - a terrible server error occured";
-}

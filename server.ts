@@ -7,12 +7,16 @@ export default function createServer() {
         const { url } = request;
         const urlHandler = routeMap[url] || routeMap["/404"];
 
+        response.writeHead(200, {
+            'Content-Type': 'text/html'
+        });
+
         try {
             const responseValue = (await urlHandler()).outerHTML;
             response.write(responseValue);
         } catch (err) {
             console.error(err);
-            response.write(await routeMap["/500"]());
+            response.write((await routeMap["/500"]()).outerHTML);
         } finally {
             response.end();
         }
