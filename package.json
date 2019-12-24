@@ -9,10 +9,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/hyperscript": "0.0.3",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.7.4"
   },
   "dependencies": {
-    "@types/node": "^12.12.21"
+    "@types/node": "^12.12.21",
+    "hyperscript": "^2.0.2"
   }
 }

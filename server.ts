@@ -8,7 +8,7 @@ export default function createServer() {
         const urlHandler = routeMap[url] || routeMap["/404"];
 
         try {
-            const responseValue = await urlHandler();
+            const responseValue = (await urlHandler()).outerHTML;
             response.write(responseValue);
         } catch (err) {
             console.error(err);

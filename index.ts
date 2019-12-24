@@ -1,6 +1,8 @@
 import createServer from './server';
 import { getPosts } from './api';
 
+import home from './pages/Home';
+
 const server = createServer();
 
 server.notFound(notFound);
@@ -14,10 +16,6 @@ server.get<string>('/throw-error', throwError);
 server.listen(8080, function onListening() {
     console.log("Listening on 8080");
 });
-
-async function home() {
-    return `home`
-}
 
 async function about() {
     return "about";
