@@ -1,4 +1,4 @@
-import h from 'hyperscript';
+import React from 'react';
 import { getPosts } from '../api';
 
 export default async function Posts() {

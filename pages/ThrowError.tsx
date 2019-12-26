@@ -1,4 +1,4 @@
-import h from 'hyperscript';
+import React from 'react';
 
 export default async function ThrowError() {
     throw new Error("shit happened");

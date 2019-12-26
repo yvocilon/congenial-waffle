@@ -1,4 +1,5 @@
 import http, { IncomingMessage, ServerResponse } from 'http';
+import ReactDOMServer from 'react-dom/server';
 
 export default function createServer() {
     const routeMap = {};
@@ -15,7 +16,7 @@ export default function createServer() {
 
         try {
 
-            const responseValue = (await urlHandler()).outerHTML;
+            const responseValue = ReactDOMServer.renderToStaticMarkup(await urlHandler());
 
             response.writeHead(statusCode, {
                 'Content-Type': 'text/html'
@@ -29,7 +30,7 @@ export default function createServer() {
             response.writeHead(500, {
                 'Content-Type': 'text/html'
             });
-            response.write((await routeMap["/500"]()).outerHTML);
+            response.write(ReactDOMServer.renderToStaticMarkup((await routeMap["/500"]())));
 
         } finally {
             response.end();
