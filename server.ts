@@ -66,7 +66,16 @@ export default function createServer() {
             throw new Error("You have to setup an internal server error page");
         }
 
-        server.listen(port, undefined, undefined, callback);
+        server.listen(port, undefined, undefined, function onListening() {
+
+            if (process.env.NODE_ENV === 'development') {
+                require('open')(`http://localhost:${port}`)
+            }
+
+            if (callback) {
+                callback();
+            }
+        });
     }
 }
 
