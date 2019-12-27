@@ -1,5 +1,6 @@
 import http, { IncomingMessage, ServerResponse } from 'http';
 import ReactDOMServer from 'react-dom/server';
+import { ServerStyleSheet } from 'styled-components'
 
 export default function createServer() {
     const routeMap = {};
@@ -16,24 +17,29 @@ export default function createServer() {
 
         try {
 
-            const responseValue = ReactDOMServer.renderToStaticMarkup(await urlHandler());
+            const html = getHtml(await urlHandler());
 
             response.writeHead(statusCode, {
                 'Content-Type': 'text/html'
             });
 
-            response.write(responseValue);
+            response.write(html);
 
 
         } catch (err) {
             console.error(err);
+
             response.writeHead(500, {
                 'Content-Type': 'text/html'
             });
-            response.write(ReactDOMServer.renderToStaticMarkup((await routeMap["/500"]())));
+
+            const html = getHtml(await routeMap["/500"]());
+
+            response.write(html);
 
         } finally {
             response.end();
+
         }
     })
 
@@ -42,6 +48,30 @@ export default function createServer() {
         listen,
         notFound,
         internalServerError
+    }
+
+    function getHtml(data: React.ReactElement) {
+
+        const sheet = new ServerStyleSheet();
+
+        try {
+            const pageHtml = ReactDOMServer.renderToStaticMarkup((sheet.collectStyles(data)));
+            const styleTags = sheet.getStyleTags()
+
+            return `<html>
+            <head>
+                ${styleTags}
+            </head>
+            <body>
+                ${pageHtml}
+            </body>
+        </html>`
+        } catch (err) {
+            throw err;
+        } finally {
+            sheet.seal();
+        }
+
     }
 
     function internalServerError<T>(callback: () => Promise<T>) {

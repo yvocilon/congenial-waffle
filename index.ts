@@ -13,10 +13,10 @@ const server = createServer();
 server.notFound(NotFound);
 server.internalServerError(InternalServerError);
 
-server.get<string>('/', Home);
-server.get<string>('/about', About);
-server.get<string>('/posts', Posts);
-server.get<string>('/throw-error', ThrowError);
+server.get<React.ReactElement>('/', Home);
+server.get<React.ReactElement>('/about', About);
+server.get<React.ReactElement>('/posts', Posts);
+server.get<React.ReactElement>('/throw-error', ThrowError);
 
 server.listen(8080, function onListening() {
     console.log("Listening on 8080");
