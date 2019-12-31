@@ -3,7 +3,7 @@ import styled, { createGlobalStyle } from 'styled-components';
 import Navigation from '../navigation/Navigation';
 
 const StyledLayout = styled.div`
-    color:yellow;
+    color:black;
 `
 const GlobalStyle = createGlobalStyle`
     html, body {
